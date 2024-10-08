@@ -12,7 +12,7 @@ router.route('/email').post(checkMail);
 
 router.route('/password').post(checkPassword);
 
-router.route('/user-details').post(getUserDetails)
+router.route('/user-details').get(getUserDetails)
 
 router.route('/logout').post(logout)
 

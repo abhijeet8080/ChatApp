@@ -23,11 +23,17 @@ const registerUser = async (req, res) => {
             profile_pic,
             password: hashPassword
         };
+
         const user = new User(payload);
         const userSave = await user.save();
+
+        // Remove the password field from the userSave object
+        const userResponse = userSave.toObject();  // Convert to plain object if it's a Mongoose document
+        delete userResponse.password;
+
         return res.status(201).json({
             message: "User Created Successfully",
-            data: userSave,
+            data: userResponse,  // Send the user object without the password
             success: true
         });
     } catch (error) {
@@ -73,6 +79,7 @@ const checkMail = async (req, res) => {
 const checkPassword = async (req, res) => {
     try {
         const { userId, password } = req.body;
+        console.log(req.body)
 
         const user = await User.findById(userId);
 
@@ -122,8 +129,13 @@ const checkPassword = async (req, res) => {
 const getUserDetails = async (req, res) => {
     try {
         console.log("Get user details called");
-        const token = req.cookies.token || "";
-        const user = await getUserDetailsFromToken(token); // Await here
+        const token = req.headers.authorization;
+        if (!token || !token.startsWith("Bearer ")) {
+            throw new ErrorHandler("Please Login to access this resource", 401);
+        }
+        const authToken = token.split(" ")[1];
+
+        const user = await getUserDetailsFromToken(authToken); // Await here
 
         if (!user) {
             return res.status(401).json({
