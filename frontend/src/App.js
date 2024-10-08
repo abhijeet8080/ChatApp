@@ -1,9 +1,14 @@
+import { Outlet } from 'react-router-dom';
 import './App.css';
+import toast, { Toaster } from 'react-hot-toast';
 
 const App = () => {
   return (
     <>
-      Hello
+    <Toaster />
+    <main>
+     <Outlet />
+     </main>
     </>
   );
 }
