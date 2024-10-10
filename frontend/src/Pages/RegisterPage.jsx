@@ -51,7 +51,7 @@ const RegisterPage = () => {
     const Url = `${process.env.REACT_APP_BACKEND_URL}/api/v1/register`;
     try {
         const response = await axios.post(Url,data)
-        console.log(response)
+        // console.log(response)
         toast.success(response.data.message)
         if(response.data.success){
             setData({

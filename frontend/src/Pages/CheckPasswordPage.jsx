@@ -4,10 +4,13 @@ import axios from "axios";
 import toast, { Toaster } from "react-hot-toast";
 import { PiUserCircleLight } from "react-icons/pi";
 import Avatar from "../Components/Avatar";
+import { useDispatch } from "react-redux";
+import { setToken, setUser } from "../redux/userSlice";
 const CheckPasswordPage = () => {
   const navigate = useNavigate();
   const location = useLocation();
-  console.log(location);
+  const dispatch = useDispatch();
+  // console.log(location);
   const [data, setData] = useState({
     userId: "",
     password: "",
@@ -35,10 +38,11 @@ const CheckPasswordPage = () => {
         userId:location?.state?._id,
         password:data.password
       })
-      localStorage.setItem('token', response.data.token);
-      console.log(response.data)
-      toast.success(response.data.message);
+      // console.log(response.data)
+      toast.success(response?.data?.message);
       if (response.data.success) {
+        dispatch(setToken(response?.data?.token))
+        localStorage.setItem('token', response?.data?.token);
         setData({
           password: "",
         });

@@ -1,7 +1,11 @@
 import React from 'react';
 import { PiUserCircleLight } from 'react-icons/pi';
+import { useSelector } from 'react-redux';
 
 const Avatar = ({ userId, name, imageUrl, width, height }) => {
+
+  const onlineUser = useSelector(state=>state?.user?.onlineUser);
+
   let avatarName = '';
   if (name) {
     const splitName = name.split(' ');
@@ -24,17 +28,19 @@ const Avatar = ({ userId, name, imageUrl, width, height }) => {
     'bg-sky-200',
     'bg-blue-200'
   ];
+  // console.log(userId)
   const bgClass = bgColor[userId ? userId % bgColor.length : Math.floor(Math.random() * bgColor.length)];
-
+  const isOnline = onlineUser.includes(userId)
   return (
     <div
-      className={`text-slate-800 overflow-hidden rounded-full shadow border text-xl font-bold ${bgClass}`}
+      className={`text-slate-800  rounded-full font-bold relative`}
       style={{ width: `${width}px`, height: `${height}px` }}
     >
       {imageUrl ? (
         <img
           src={imageUrl}
           alt={name}
+          className='overflow-hidden rounded-full'
           style={{
             width: '100%',
             height: '100%',
@@ -51,6 +57,11 @@ const Avatar = ({ userId, name, imageUrl, width, height }) => {
       ) : (
         <PiUserCircleLight size={width} />
       )}
+      {
+        isOnline&&(
+          <div className='bg-green-600 p-1 absolute bottom-1 z-10 -right-0 rounded-full'></div>
+        )
+      }
     </div>
   );
 };

@@ -1,32 +1,49 @@
-const express = require('express');
-const cors =  require("cors")
+// index.js
 const dotenv = require("dotenv");
+
+// Load environment variables first
+dotenv.config({ path: "./config/config.env" });
+
+const express = require('express');
+const cors = require("cors");
 const connectDatabase = require("./config/database");
-const app = require("./app.js");
+const app = require("./app"); // Import the app from app.js
+const { server, io } = require("./socket/index"); // Import the server and io from socket/index.js
 
-process.on("uncaughtException",(err)=>{
-    console.log(`Error: ${err.message}`);
-    console.log("Shutting down the server due to Uncaught Exception");
+// Handle uncaught exceptions
+process.on("uncaughtException", (err) => {
+    console.error(`Uncaught Exception: ${err.message}`);
+    console.error("Shutting down the server due to Uncaught Exception");
     process.exit(1);
+});
 
-})
+// Connect to the database
+connectDatabase();
 
+// Set up CORS middleware for Express app
+app.use(cors({
+    origin: process.env.FRONTEND_URL,
+    credentials: true
+}));
 
-dotenv.config({path:"./config/config.env"});
-connectDatabase()
+// Handle preflight requests for all routes
+app.options('*', cors({
+    origin: process.env.FRONTEND_URL,
+    credentials: true
+}));
 
+const PORT = process.env.PORT || 8080;
 
-const PORT = process.env.PORT||8080;
+// Start the server
+server.listen(PORT, () => {
+    console.log(`Server is running on PORT: ${PORT}`);
+});
 
-const server = app.listen(PORT,()=>{
-    console.log(`Server is running on PORT: ${PORT} `);
-})
-
-
-process.on("unhandledRejection",err=>{
-    console.log(`Error:${err.message}`)
-    console.log("Shutting down the server due to unhandled Promise Rejection");
-    server.close(()=>{
+// Handle unhandled promise rejections
+process.on("unhandledRejection", err => {
+    console.error(`Unhandled Rejection: ${err.message}`);
+    console.error("Shutting down the server due to unhandled Promise Rejection");
+    server.close(() => {
         process.exit(1);
-    })
-})
+    });
+});

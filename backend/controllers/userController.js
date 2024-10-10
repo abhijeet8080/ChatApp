@@ -140,6 +140,7 @@ const getUserDetails = async (req, res) => {
         if (!user) {
             return res.status(401).json({
                 message: "Unauthorized access. Please login again.",
+                logout:true,
                 error: true
             });
         }
@@ -178,11 +179,12 @@ const logout = async (req, res) => {
         });
     }
 };
-//Update User Details
+// Update User Details
 const updateUserDetails = async (req, res) => {
     try {
-        const token = req.cookies.token || "";
+        const token = req.body.token || ""; // Correctly extract the token
         const user = await getUserDetailsFromToken(token);
+        console.log(user);
 
         if (!user) {
             return res.status(401).json({
@@ -192,6 +194,7 @@ const updateUserDetails = async (req, res) => {
         }
 
         const { name, profile_pic } = req.body;
+        console.log(req.body);
 
         // Validate input
         if (!name && !profile_pic) {
@@ -201,7 +204,10 @@ const updateUserDetails = async (req, res) => {
             });
         }
 
-        const updateUser = await User.updateOne({ _id: user._id }, { name, profile_pic });
+        const updateUser = await User.updateOne(
+            { _id: user._id },
+            { name, profile_pic }
+        );
 
         if (updateUser.nModified === 0) {
             return res.status(404).json({
@@ -212,6 +218,7 @@ const updateUserDetails = async (req, res) => {
 
         // Optionally fetch the updated user info
         const userInfo = await User.findById(user._id);
+        console.log(userInfo);
 
         return res.status(200).json({
             message: "User Details Updated Successfully",
@@ -219,6 +226,7 @@ const updateUserDetails = async (req, res) => {
             success: true
         });
     } catch (error) {
+        console.error("Error updating user details:", error);
         return res.status(500).json({
             message: error.message || error,
             error: true
@@ -226,4 +234,39 @@ const updateUserDetails = async (req, res) => {
     }
 };
 
-module.exports = {registerUser,checkMail, checkPassword,getUserDetails,logout,updateUserDetails};
+
+const searchUser = async (req, res) => {
+    try {
+        const { search } = req.body;
+        let user;
+
+        if (!search) {
+            // Fetch all users if no search term is provided
+            user = await User.find({}).select("-password");
+        } else {
+            const query = new RegExp(search, "i", "g");
+            user = await User.find({
+                "$or": [
+                    { name: query },
+                    { email: query }
+                ]
+            }).select("-password");
+        }
+
+        return res.json({
+            message: 'All user',
+            data: user,
+            success: true
+        });
+    } catch (error) {
+        console.error("Error user details:", error);
+
+        return res.status(500).json({
+            message: error.message || error,
+            error: true
+        });
+    }
+};
+
+
+module.exports = {registerUser,checkMail, checkPassword,getUserDetails,logout,updateUserDetails,searchUser};

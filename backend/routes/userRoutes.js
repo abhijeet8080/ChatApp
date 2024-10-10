@@ -1,5 +1,5 @@
 const express = require('express');
-const {registerUser, checkMail, checkPassword, getUserDetails, logout, updateUserDetails} = require('../controllers/userController');
+const {registerUser, checkMail, checkPassword, getUserDetails, logout, updateUserDetails,searchUser} = require('../controllers/userController');
 
 
 
@@ -17,6 +17,8 @@ router.route('/user-details').get(getUserDetails)
 router.route('/logout').post(logout)
 
 router.route('/update-user').post(updateUserDetails);
+
+router.route('/search-user').post(searchUser)
 
 
 
