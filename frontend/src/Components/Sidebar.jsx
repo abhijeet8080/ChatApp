@@ -1,7 +1,7 @@
 // Sidebar.js
+import { FaUserPlus, FaImage, FaVideo } from "react-icons/fa";
 import React, { useEffect, useState } from "react";
 import { IoChatbubbleEllipsesSharp } from "react-icons/io5";
-import { FaUserPlus, FaImage, FaVideo } from "react-icons/fa";
 import { NavLink, useNavigate } from "react-router-dom";
 import { RiLogoutBoxRFill } from "react-icons/ri";
 import Avatar from "./Avatar";
@@ -19,69 +19,94 @@ const Sidebar = () => {
   const [editUserOpen, setEditUserOpen] = useState(false);
   const [allConversations, setAllConversations] = useState([]);
   const [openSearchUser, setOpenSearchUser] = useState(false);
-
-  const socketConnection = useSelector(
-    (state) => state?.user?.socketConnection
-  );
+  const socketConnection = useSelector((state) => state.user.socketConnection);
 
   useEffect(() => {
     if (socketConnection) {
-      // Emit 'sidebar' without passing user._id
+      // Emit 'sidebar' to request conversations
       socketConnection.emit("sidebar");
-  
-      // Listen for 'conversation' event
+
+      // Handle incoming 'conversation' data
       const handleConversations = (data) => {
-        console.log("conversation", data);
         if (data.error) {
           console.error(data.error);
-          // Optionally, show an error message to user
-          return;
+          return; // Optionally, show an error message to user
         }
-  
-        // Map conversations to extract other user details
+
         const conversationUserData = data.map((conv) => {
+          const unSeenMsg = conv.lastMsg?.sender?._id === user._id ? 0 : conv.unSeenMsg;
           return {
             _id: conv._id,
             userDetails: conv.userDetails,
-            unSeenMsg: conv.unSeenMsg,
+            unSeenMsg,
             lastMsg: conv.lastMsg,
           };
+        }).sort((a, b) => {
+          const dateA = a.lastMsg?.createdAt ? new Date(a.lastMsg.createdAt).getTime() : 0;
+          const dateB = b.lastMsg?.createdAt ? new Date(b.lastMsg.createdAt).getTime() : 0;
+          return dateB - dateA;
         });
-  
+
         setAllConversations(conversationUserData);
       };
-  
+
+      // Handle 'messages-seen' event to update unSeenMsg
+      const handleMessagesSeen = ({ conversationId }) => {
+        setAllConversations((prevConversations) =>
+          prevConversations.map((conv) =>
+            conv._id === conversationId ? { ...conv, unSeenMsg: 0 } : conv
+          )
+        );
+      };
+
       socketConnection.on("conversation", handleConversations);
-  
-      // Cleanup listener on unmount or dependency change
+      socketConnection.on("messages-seen", handleMessagesSeen);
+
+      // Cleanup listeners on unmount
       return () => {
         socketConnection.off("conversation", handleConversations);
+        socketConnection.off("messages-seen", handleMessagesSeen);
       };
     }
   }, [socketConnection, user]);
-  
+
   const handleLogout = () => {
-    // Dispatch a logout action to clear user data and tokens
     dispatch(logout());
-    // Optionally, navigate to the login page
     navigate("/email");
-    // Optionally, disconnect the socket
     if (socketConnection) {
       socketConnection.disconnect();
     }
   };
 
+  const handleOpenMessagePage = (conv) => {
+    // Mark messages as seen when user opens the conversation
+    if (socketConnection) {
+      socketConnection.emit("mark-messages-seen", { conversationId: conv._id, userId: user._id });
+    }
+    // Navigate to the message page
+    navigate(`/${conv.userDetails._id}`);
+
+    // Update local state to set unSeenMsg to 0
+    setAllConversations((prevConversations) =>
+      prevConversations.map((conversation) =>
+        conversation._id === conv._id ? { ...conversation, unSeenMsg: 0 } : conversation
+      )
+    );
+  };
+
+  console.log("allConversations", allConversations);
+  
   return (
     <div className="w-full h-full flex bg-white">
       {/* Left Icon Section */}
       <div className="bg-slate-100 w-12 h-full rounded-tr-lg rounded-br-lg py-5 text-slate-700 flex flex-col justify-between">
         <div>
           <NavLink
-            to="/chat" // Corrected 'to' prop for navigation
+            to="/"
             title="chat"
             className={({ isActive }) =>
               `w-12 h-12 flex justify-center items-center cursor-pointer hover:bg-slate-200 rounded ${
-                isActive ? "bg-slate-200" : ""
+                isActive ? "bg-slate-300" : ""
               }`
             }
           >
@@ -104,14 +129,14 @@ const Sidebar = () => {
             <Avatar
               width={25}
               height={25}
-              name={user?.name}
-              imageUrl={user?.profile_pic}
-              userId={user?._id}
+              name={user.name}
+              imageUrl={user.profile_pic}
+              userId={user._id}
             />
           </button>
           <button
             title="Log Out"
-            onClick={handleLogout} // Added onClick handler for logout
+            onClick={handleLogout}
             className="w-12 h-12 flex justify-center items-center cursor-pointer hover:bg-slate-200 rounded"
           >
             <RiLogoutBoxRFill size={25} />
@@ -120,7 +145,7 @@ const Sidebar = () => {
       </div>
 
       {/* Sidebar content */}
-      <div className="w-full ">
+      <div className="w-full">
         <div className="h-16 flex items-center">
           <h2 className="text-lg font-bold p-4 text-slate-800">Messages</h2>
           <Divider />
@@ -137,50 +162,57 @@ const Sidebar = () => {
               </p>
             </div>
           )}
-          {allConversations.map((conv) => {
-            return (
-              <NavLink
-                to={`/${conv.userDetails._id}`} // Corrected route
-                key={conv._id}
-                className="flex items-center gap-2 px-2 py-3 border border-transparent hover:border-b-primary hover:bg-slate-200 rounded "
-              >
-                <Avatar
-                  width={40}
-                  height={40}
-                  imageUrl={conv.userDetails.profile_pic}
-                  name={conv.userDetails.name}
-                  userId={conv.userDetails._id}
-                />
-                <div className="flex flex-col w-full">
-                  <div className="flex justify-between items-center w-full">
-                    <h3 className="text-ellipsis line-clamp-1">
-                      {conv.userDetails.name}
-                    </h3>
-                    {conv.unSeenMsg > 0 && (
-                      <span className="bg-primary text-white text-xs rounded-full px-2 py-0.5">
-                        {conv.unSeenMsg}
-                      </span>
-                    )}
-                  </div>
-                  <div className="flex items-center">
-                    {conv.lastMsg && (
-                      <p className="text-sm text-slate-500 ml-2">
-                        {conv.lastMsg.text
-                          ? conv.lastMsg.text.length > 30
-                            ? `${conv.lastMsg.text.substring(0, 30)}...`
-                            : conv.lastMsg.text
-                          : conv.lastMsg.imageUrl
-                          ? (<div className="flex items-center"><FaImage size={20} className="mr-1"/> Sent an image.</div>)
-                          : conv.lastMsg.videoUrl
-                          ? (<div className="flex items-center"><FaVideo size={20} className="mr-1"/> Sent a video.</div>)
-                          : "Sent a message."}
-                      </p>
-                    )}
-                  </div>
+          {allConversations.map((conv) => (
+            <NavLink
+              to={`/${conv.userDetails._id}`} // Corrected route
+              key={conv._id}
+              onClick={() => handleOpenMessagePage(conv)}
+              className="flex items-center gap-2 px-2 py-3 border border-transparent hover:border-b-primary hover:bg-slate-200 rounded"
+            >
+              <Avatar
+                width={40}
+                height={40}
+                imageUrl={conv.userDetails.profile_pic}
+                name={conv.userDetails.name}
+                userId={conv.userDetails._id}
+              />
+              <div className="flex flex-col w-full">
+                <div className="flex justify-between items-center w-full">
+                  <h3 className="text-ellipsis line-clamp-1">
+                    {conv.userDetails.name}
+                  </h3>
+                  {conv.unSeenMsg > 0 && (
+                    <span className="bg-primary text-white text-xs rounded-full px-2 py-0.5">
+                      {conv.unSeenMsg}
+                    </span>
+                  )}
                 </div>
-              </NavLink>
-            );
-          })}
+                <div className="flex items-center">
+                  {conv.lastMsg && (
+                    <p className="text-sm text-slate-500">
+                      {conv.lastMsg.text
+                        ? conv.lastMsg.text.length > 28
+                          ? `${conv.lastMsg.text.substring(0, 20)}...`
+                          : conv.lastMsg.text
+                        : conv.lastMsg.imageUrl
+                        ? (
+                          <div className="flex items-center">
+                            <FaImage size={20} className="mr-1" /> Sent an image.
+                          </div>
+                        )
+                        : conv.lastMsg.videoUrl
+                        ? (
+                          <div className="flex items-center">
+                            <FaVideo size={20} className="mr-1" /> Sent a video.
+                          </div>
+                        )
+                        : "Sent a message."}
+                    </p>
+                  )}
+                </div>
+              </div>
+            </NavLink>
+          ))}
         </div>
       </div>
 
@@ -188,7 +220,7 @@ const Sidebar = () => {
       {editUserOpen && (
         <EditUserDetails onClose={() => setEditUserOpen(false)} user={user} />
       )}
-      {/**Search User */}
+      {/** Search User */}
       {openSearchUser && (
         <SearchUser onClose={() => setOpenSearchUser(false)} />
       )}

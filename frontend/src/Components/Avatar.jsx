@@ -33,7 +33,7 @@ const Avatar = ({ userId, name, imageUrl, width, height }) => {
   const isOnline = onlineUser.includes(userId)
   return (
     <div
-      className={`text-slate-800  rounded-full font-bold relative`}
+      className={`text-slate-800 ${bgClass} rounded-full font-bold relative `}
       style={{ width: `${width}px`, height: `${height}px` }}
     >
       {imageUrl ? (
@@ -44,12 +44,12 @@ const Avatar = ({ userId, name, imageUrl, width, height }) => {
           style={{
             width: '100%',
             height: '100%',
-            objectFit: 'cover', // Ensure the image covers the circle fully
+            objectFit: 'cover', 
           }}
         />
       ) : name ? (
         <div
-          className="flex justify-center items-center"
+          className="flex justify-center items-center "
           style={{ width: `${width}px`, height: `${height}px` }}
         >
           {avatarName}

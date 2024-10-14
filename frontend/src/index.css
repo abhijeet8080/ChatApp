@@ -3,5 +3,5 @@
 @tailwind utilities;
 
 body{
-    @apply bg-slate-900
+    @apply bg-gradient-to-tr from-slate-900 via-purple-900 to-slate-900
 }

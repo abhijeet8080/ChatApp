@@ -66,7 +66,7 @@ const SearchUser = ({onClose}) => {
             })}
         </div>
       </div>
-      <div className="absolute top-0 text-slate-400 right-0 text-2xl  p-2 lg:text-4xl hover:text-white" onClick={onClose}>
+      <div className="absolute top-2 text-white  right-0 text-2xl  p-2 lg:text-4xl hover:text-slate-400" onClick={onClose}>
         <button>
             <IoIosClose size={50}/> 
         </button>

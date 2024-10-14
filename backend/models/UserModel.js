@@ -8,6 +8,7 @@ const userSchema =new mongoose.Schema({
     email:{
         type:String,
         required:[true,"Please enter your email"],
+        unique:true,
     },
     password:{
         type:String,
@@ -16,10 +17,17 @@ const userSchema =new mongoose.Schema({
     profile_pic:{
         type:String,
         default:""
-    }
+    },
+    isVerified:{
+        type:Boolean,
+        default:false,
+    },
+    verificationCode:String,
+    resetPasswordToken: String, 
+    resetPasswordExpires: Date, 
 
 },{
     timestamps:true
 });
-
+userSchema.index({ email: 1 });
 module.exports = mongoose.model("User",userSchema);

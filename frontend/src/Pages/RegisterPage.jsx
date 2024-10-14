@@ -4,8 +4,12 @@ import { Link, useNavigate } from "react-router-dom";
 import uploadFile from "../Helper/uploadFile";
 import axios from "axios";
 import toast, { Toaster } from 'react-hot-toast';
+import Loader from "../Components/Loader";
+
 const RegisterPage = () => {
     const navigate = useNavigate();
+  const [loading, setLoading] = useState(false);
+
   const [data, setData] = useState({
     name: "",
     email: "",
@@ -47,12 +51,15 @@ const RegisterPage = () => {
   const handleSubmit = async(e) => {
     e.preventDefault();
     e.stopPropagation();
-
     const Url = `${process.env.REACT_APP_BACKEND_URL}/api/v1/register`;
     try {
+    setLoading(true)
+
         const response = await axios.post(Url,data)
+    setLoading(false)
+
         // console.log(response)
-        toast.success(response.data.message)
+        toast.success(response?.data?.message)
         if(response.data.success){
             setData({
                 name: "",
@@ -61,8 +68,12 @@ const RegisterPage = () => {
                 profile_pic: "",
             })
         }
-        navigate('/email')
+        navigate('/verifyemail',{
+          state:response?.data?.data
+        })
     } catch (error) {
+      setLoading(false);
+
         if (error.response && error.response.data) {
             // Handle the 400 error from backend
             console.log('Error message:', error.response.data.message);  // This should print "User Already Exists"
@@ -77,9 +88,9 @@ const RegisterPage = () => {
   };
   return (
     <>
-      <div className="mt-10 ">
+      <div className="mt-10 flex items-center justify-center">
         <div className="bg-white w-full max-w-sm mx:2  rounded overflow-hidden p-4 md:mx-auto">
-          <h3>Welcome to Chat App</h3>
+          <h3>Welcome to Whisper</h3>
 
           <form action="" className="grid gap-4 mt-5" onSubmit={handleSubmit}>
             <div className="flex flex-col gap-1">
@@ -152,7 +163,7 @@ const RegisterPage = () => {
             </div>
 
             <button className="bg-primary text-lg px-4 hover:bg-secondary rounded mt-2 font-bold text-white leading-relaxed tracking-wide">
-              Register
+              {loading?<Loader/>:"Register"}
             </button>
           </form>
           <p className="my-3 text-center">Already have account? <Link to={"/email"} className="hover:text-primary font-semibold  ">Login</Link></p>

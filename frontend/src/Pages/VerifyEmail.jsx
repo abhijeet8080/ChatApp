@@ -1,3 +1,4 @@
+import React from 'react'
 import { useState,useEffect } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import axios from "axios";
@@ -5,17 +6,20 @@ import toast from "react-hot-toast";
 import Avatar from "../Components/Avatar";
 import { useDispatch } from "react-redux";
 import { setToken } from "../redux/userSlice";
-import Loader from "../Components/Loader";
-const CheckPasswordPage = () => {
+import Loader from '../Components/Loader';
 
-  const [loading, setLoading] = useState(false)
+const VerifyEmail = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const dispatch = useDispatch();
-  // console.log(location);
+  const [loading, setLoading] = useState(false)
+  console.log(location)
+  console.log(location?.state?.email)
+
+  
   const [data, setData] = useState({
-    userId: "",
-    password: "",
+    email: "",
+    verificationCode: "",
   });
 
   const handleChange = (e) => {
@@ -28,53 +32,32 @@ const CheckPasswordPage = () => {
       };
     });
   };
-  const navigateToForgotPassword=async(e)=>{
-    e.preventDefault();
-    e.stopPropagation();
-    setLoading(true)
-    const Url = `${process.env.REACT_APP_BACKEND_URL}/api/v1/forgot-password`;
-    try {
-      const response = await axios.post(Url,{
-        email:location?.state?.email,
-      })
-      toast.success(response?.data?.message);
-      setLoading(false);
-    } catch (error) {
-      setLoading(false)
-      if (error.response && error.response.data) {
-        // Handle the 400 error from backend
-        console.log("Error message:", error.response.data.message); // This should print "User Already Exists"
-        toast.error(error?.response?.data?.message);
-      } else {
-        // Handle any other errors
-        console.error("Error occurred:", error.message);
-        toast.error(error.message);
-      }
-    }
-    
-  }
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     e.stopPropagation();
 
-    const Url = `${process.env.REACT_APP_BACKEND_URL}/api/v1/password`;
+    const Url = `${process.env.REACT_APP_BACKEND_URL}/api/v1/verifyemail`;
     // const Url = "http://localhost:4000/api/v1/password"
     try {
+        setLoading(true)
       const response = await axios.post(Url,{
-        userId:location?.state?._id,
-        password:data.password
+        email:location?.state?.email,
+        verificationCode:data.verificationCode
       })
+      setLoading(false);
       // console.log(response.data)
       toast.success(response?.data?.message);
       if (response.data.success) {
         dispatch(setToken(response?.data?.token))
         localStorage.setItem('token', response?.data?.token);
         setData({
-          password: "",
+          verificationCode: "",
         });
       }
       navigate("/");
     } catch (error) {
+        setLoading(false);
       if (error.response && error.response.data) {
         // Handle the 400 error from backend
         console.log("Error message:", error.response.data.message); // This should print "User Already Exists"
@@ -86,14 +69,18 @@ const CheckPasswordPage = () => {
       }
     }
   };
+
+
   useEffect(()=>{
     if(!location.state?.name){
       navigate('/email')
     }
   })
+
+
+
   return (
-    <>
-      <div className="mt-10 ">
+    <div className="mt-10 ">
         <div className="bg-white w-full max-w-sm mx:2  rounded overflow-hidden p-4 md:mx-auto">
           <div className="w-fit mx-auto mb-2 flex justify-center items-center flex-col">
             {/* <PiUserCircleLight size={80} /> */}
@@ -109,36 +96,35 @@ const CheckPasswordPage = () => {
 
           <form action="" className="grid gap-4 mt-5" onSubmit={handleSubmit}>
             <div className="flex flex-col gap-1">
-              <label htmlFor="email">Password :</label>
+              <label htmlFor="verificationCode">OTP :</label>
               <input
-                type="password"
-                id="password"
-                placeholder="Please Enter your password"
-                name="password"
+                type="text"
+                id="verificationCode"
+                placeholder="Please Enter your OTP"
+                name="verificationCode"
                 className="bg-slate-100 px-2 py-1 focus:outline-primary"
-                value={data.password}
+                value={data.verificationCode}
                 onChange={handleChange}
                 required
               />
             </div>
 
-            {!loading&&<button className="bg-primary text-lg px-4 hover:bg-secondary rounded mt-2 font-bold text-white leading-relaxed tracking-wide">
-              Verify
-            </button>}
+            <button className="bg-primary text-lg px-4 hover:bg-secondary rounded mt-2 font-bold text-white leading-relaxed tracking-wide">
+              {loading?<Loader/>:"Verify"}
+            </button>
           </form>
           <p className="my-3 text-center">
            
-            {loading?<Loader/>:(<button
-              onClick={navigateToForgotPassword}
+            <Link
+              to={"/forgot-password"}
               className="hover:text-primary font-semibold  "
             >
               Forgot Password?
-            </button>)}
+            </Link>
           </p>
         </div>
       </div>
-    </>
-  );
-};
+  )
+}
 
-export default CheckPasswordPage;
+export default VerifyEmail

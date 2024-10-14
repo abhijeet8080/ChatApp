@@ -32,6 +32,7 @@ const MessagePage = () => {
     videoUrl: "",
   });
   const [allMessages, setAllMessages] = useState([]);
+  const [error, setError] = useState(null); // To handle server-side errors
   const currentMsg = useRef();
 
   const socketConnection = useSelector(
@@ -116,12 +117,12 @@ const MessagePage = () => {
     if (message.text || message.imageUrl || message.videoUrl) {
       if (socketConnection) {
         socketConnection.emit("new-message", {
-          sender: user?._id,
+          // Remove 'sender' as it's handled server-side
           receiver: params?.userId,
           text: message.text,
           imageUrl: message.imageUrl,
           videoUrl: message.videoUrl,
-          msgByUserId: user?._id,
+          // 'msgByUserId' is no longer needed; sender is server-validated
         });
         setMessage({
           text: "",
@@ -141,6 +142,7 @@ const MessagePage = () => {
       const handleMessagePageData = (data) => {
         if (data.error) {
           console.error(data.error);
+          setError(data.error); // Optionally display this error in the UI
         } else {
           setDataUser(data.user);
           if (data.conversation && data.conversation.messages) {
@@ -154,23 +156,44 @@ const MessagePage = () => {
       // Listen for 'message' events
       const handleNewMessage = (conversation) => {
         if (conversation && conversation.messages) {
-          setAllMessages(conversation.messages);
+          const targetUserId = params.userId.toString();
+          const currentUserId = user._id.toString();
+
+          // Determine if the incoming conversation is with the currently viewed user
+          const isCurrentConversation =
+            (conversation.sender && conversation.sender._id.toString() === targetUserId) ||
+            (conversation.receiver && conversation.receiver._id.toString() === targetUserId);
+
+          if (isCurrentConversation) {
+            setAllMessages(conversation.messages);
+          } else {
+            // Optionally, handle other conversations (e.g., show a notification)
+            console.log("Received message for a different conversation. Ignoring.");
+          }
         }
+      };
+
+      // Listen for 'error' events from the server
+      const handleError = (errorData) => {
+        console.error("Socket error:", errorData.message);
+        setError(errorData.message);
       };
 
       socketConnection.on("message-page-data", handleMessagePageData);
       socketConnection.on("message", handleNewMessage);
+      socketConnection.on("error", handleError);
 
       // Cleanup listeners on unmount or dependency change
       return () => {
         socketConnection.off("message-page-data", handleMessagePageData);
         socketConnection.off("message", handleNewMessage);
+        socketConnection.off("error", handleError);
       };
     }
   }, [socketConnection, params?.userId, user]);
 
   return (
-    <div className="bg-[url('https://images.hdqwalls.com/download/the-batman-movie-8k-g5-1920x1080.jpg')] bg-no-repeat min-h-screen">
+    <div className="bg-[url('https://images.hdqwalls.com/download/the-batman-movie-8k-g5-1920x1080.jpg')] bg-cover ">
       <header className="sticky top-0 h-16 bg-white flex items-center justify-between px-4 sm:px-6 md:px-8 lg:px-10 xl:px-12">
         <div className="flex items-center gap-4">
           <Link to="/" className="lg:hidden">
@@ -203,32 +226,35 @@ const MessagePage = () => {
         </div>
       </header>
       {/**Show All Messages */}
-      <section className="h-[calc(100vh-128px)] bg-slate-200 bg-opacity-20 overflow-x-hidden overflow-y-scroll scrollbar relative">
+      <section className=" h-[calc(100vh-128px)] bg-slate-200 bg-opacity-20 overflow-x-hidden overflow-y-scroll scrollbar relative">
         
+        {/**Display Error if Any */}
+        {error && (
+          <div className="bg-red-200 text-red-800 p-2 m-4 rounded">
+            {error}
+          </div>
+        )}
+
         {/**All messages */}
-        <div className="flex flex-col gap-2 py-2 px-4">
+        <div className="flex flex-col gap-2 py-2 px-2">
           {allMessages.map((msg, index) => (
-            <div
-              key={msg._id || index}
-              className={`bg-white px-3 py-1 my-2 rounded w-fit max-w-xs ${
-                user._id === msg.msgByUserId ? "ml-auto bg-cyan-200" : "mr-auto"
-              }`}
-            >
+            <div className={` p-1 py-1 rounded w-fit max-w-[230px] md:max-w-sm lg:max-w-md ${user._id === msg?.msgByUserId ? "ml-auto bg-teal-200" : "bg-white"}`}>
+
               {msg.imageUrl && (
                 <img
                   src={msg.imageUrl}
                   alt="messageImage"
-                  className="mt-2 rounded object-cover max-w-xs"
+                  className="mt-2 rounded object-cover max-w-[230px] md:max-w-sm lg:max-w-md"
                 />
               )}
               {msg.videoUrl && (
                 <video
                   src={msg.videoUrl}
                   controls
-                  className="mt-2 rounded object-cover max-w-xs"
+                  className="mt-2 rounded object-cover max-w-[230px] md:max-w-sm lg:max-w-md"
                 />
               )}
-              {msg.text && <p className="px-2 break-words ">{msg.text}</p>}
+              {msg.text && <p className="px-[5px] break-words ">{msg.text}</p>}
               <p className="text-xs ml-auto w-fit mt-1">
                 {moment(msg.createdAt).format("hh:mm A")}
               </p>
@@ -241,7 +267,9 @@ const MessagePage = () => {
         </div>
         {/**Upload Image Display */}
         {message.imageUrl && (
+          
           <div className="w-full h-full sticky bottom-0 bg-slate-700 bg-opacity-30 flex justify-center items-center rounded overflow-hidden ">
+          
             <div
               onClick={handleClearPhoto}
               className="w-fit p-2 absolute top-0 right-0 cursor-pointer text-slate-300 hover:text-primary"

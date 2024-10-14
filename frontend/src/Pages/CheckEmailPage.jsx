@@ -52,12 +52,13 @@ const CheckEmailPage = () => {
   };
   return (
     <>
+    
       <div className="mt-10 ">
-        <div className="bg-white w-full max-w-sm mx:2  rounded overflow-hidden p-4 md:mx-auto">
+        <div className="bg-white w-full max-w-sm mx:2  rounded overflow-hidden p-4 md:mx-auto  ">
         <div className="w-fit mx-auto mb-2">
         <PiUserCircleLight size={80} />
         </div>
-          <h3>Welcome to Chat App</h3>
+          <h3>Welcome to Whisper</h3>
 
           <form action="" className="grid gap-4 mt-5" onSubmit={handleSubmit}>
           

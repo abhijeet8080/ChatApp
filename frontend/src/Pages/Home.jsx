@@ -7,6 +7,7 @@ import { logout, setUser,setOnlineUser, setSocketConnection } from "../redux/use
 import Sidebar from "../Components/Sidebar";
 import logo from "../Assets/logo.png"
 import io from "socket.io-client"
+import Logo from "../Components/Logo";
 const Home = () => {
   const user = useSelector((state) => state.user);
   const dispatch = useDispatch();
@@ -71,7 +72,8 @@ useEffect(() => {
   // console.log(location)
   const basePath = location.pathname==="/"
   return (
-    <div className="grid grid-cols-[300px,1fr] h-screen max-h-screen">
+    // <div className="">
+    <div className=" grid lg:grid-cols-[300px,1fr] h-screen max-h-screen">
       <section className={`bg-white ${!basePath&&'hidden'} lg:block`}>
         <Sidebar />
       </section>
@@ -81,15 +83,18 @@ useEffect(() => {
       </section>
 
 
-      <div className={`justify-center items-center flex-col gap-2 hidden ${!basePath ? "hidden" : "lg:flex" }`}>
-            <div>
-              <img
+      <div className={` justify-center items-center flex-col gap-2 hidden ${!basePath ? "hidden" : "lg:flex" }`}>
+            <div className="text-7xl font-bold text-white uppercase">
+              {/* <img
                 src={logo}
                 width={250}
                 alt='logo'
-              />
+              /> */}
+              Whisper
             </div>
-            <p className='text-lg mt-2 text-slate-500'>Select user to send message</p>
+            <p className='text-xl mt-2 text-slate-200 font-semibold '>Connect Instantly, Chat Effortlessly</p>
+
+            <p className='text-base mt-2 text-slate-200 '>Select user to send message</p>
         </div>
     </div>
   );

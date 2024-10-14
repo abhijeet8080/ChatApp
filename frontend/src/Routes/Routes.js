@@ -8,6 +8,7 @@ import Home from '../Pages/Home'
 import MessagePage from '../Components/MessagePage'
 import AuthLayouts from '../Layouts'
 import Forgotpassword from '../Pages/Forgotpassword'
+import VerifyEmail from '../Pages/VerifyEmail'
 const Router = createBrowserRouter([
     {
         path:"/",
@@ -26,8 +27,13 @@ const Router = createBrowserRouter([
                 element:<AuthLayouts><CheckPasswordPage/></AuthLayouts>
             },
             {
-                path:"forgot-password",
-                element:<AuthLayouts><Forgotpassword/></AuthLayouts>
+                path: "forgot-password/:token",
+                element: <AuthLayouts><Forgotpassword /></AuthLayouts>
+              },
+              
+            {
+                path:"verifyemail",
+                element:<AuthLayouts><VerifyEmail/></AuthLayouts>
             },
             {
                 path:"",
