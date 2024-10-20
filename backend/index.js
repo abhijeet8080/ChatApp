@@ -2,8 +2,10 @@
 const dotenv = require("dotenv");
 
 // Load environment variables first
-dotenv.config({ path: "./config.env" });
-
+if (process.env.NODE_ENV !== 'production') {
+    require('dotenv').config({ path: "./config.env" });
+  }
+  
 const express = require('express');
 const cors = require("cors");
 const connectDatabase = require("./database");

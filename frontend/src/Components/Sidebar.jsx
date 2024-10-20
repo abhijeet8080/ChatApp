@@ -34,19 +34,26 @@ const Sidebar = () => {
           return; // Optionally, show an error message to user
         }
 
-        const conversationUserData = data.map((conv) => {
-          const unSeenMsg = conv.lastMsg?.sender?._id === user._id ? 0 : conv.unSeenMsg;
-          return {
-            _id: conv._id,
-            userDetails: conv.userDetails,
-            unSeenMsg,
-            lastMsg: conv.lastMsg,
-          };
-        }).sort((a, b) => {
-          const dateA = a.lastMsg?.createdAt ? new Date(a.lastMsg.createdAt).getTime() : 0;
-          const dateB = b.lastMsg?.createdAt ? new Date(b.lastMsg.createdAt).getTime() : 0;
-          return dateB - dateA;
-        });
+        const conversationUserData = data
+          .map((conv) => {
+            const unSeenMsg =
+              conv.lastMsg?.sender?._id === user._id ? 0 : conv.unSeenMsg;
+            return {
+              _id: conv._id,
+              userDetails: conv.userDetails,
+              unSeenMsg,
+              lastMsg: conv.lastMsg,
+            };
+          })
+          .sort((a, b) => {
+            const dateA = a.lastMsg?.createdAt
+              ? new Date(a.lastMsg.createdAt).getTime()
+              : 0;
+            const dateB = b.lastMsg?.createdAt
+              ? new Date(b.lastMsg.createdAt).getTime()
+              : 0;
+            return dateB - dateA;
+          });
 
         setAllConversations(conversationUserData);
       };
@@ -82,7 +89,10 @@ const Sidebar = () => {
   const handleOpenMessagePage = (conv) => {
     // Mark messages as seen when user opens the conversation
     if (socketConnection) {
-      socketConnection.emit("mark-messages-seen", { conversationId: conv._id, userId: user._id });
+      socketConnection.emit("mark-messages-seen", {
+        conversationId: conv._id,
+        userId: user._id,
+      });
     }
     // Navigate to the message page
     navigate(`/${conv.userDetails._id}`);
@@ -90,12 +100,13 @@ const Sidebar = () => {
     // Update local state to set unSeenMsg to 0
     setAllConversations((prevConversations) =>
       prevConversations.map((conversation) =>
-        conversation._id === conv._id ? { ...conversation, unSeenMsg: 0 } : conversation
+        conversation._id === conv._id
+          ? { ...conversation, unSeenMsg: 0 }
+          : conversation
       )
     );
   };
 
-  
   return (
     <div className="w-full h-full flex bg-white">
       {/* Left Icon Section */}
@@ -121,14 +132,19 @@ const Sidebar = () => {
           </div>
         </div>
         <div className="flex flex-col items-center">
-          {process.env.REACT_APP_ABOUTME&&<Link to={'aboutme'}  title={`About`}
-            className="w-12 h-12 flex flex-col justify-center items-center cursor-pointer hover:bg-slate-200 rounded">
-              <Avatar 
-              width={25}
-              height={25}
-              imageUrl={`https://res.cloudinary.com/daasrv6ic/image/upload/v1728474509/chat-app-file/oxdj0xdvm06evydtwpcd.png`}
-              />
-          </Link>}
+          {process.env.REACT_APP_ABOUTME && (
+            
+              <a
+                href={process.env.REACT_APP_ABOUTME}
+                className="w-12 h-12 flex flex-col justify-center items-center cursor-pointer hover:bg-slate-200 rounded"
+              >
+                <Avatar
+                  width={25}
+                  height={25}
+                  imageUrl={`https://res.cloudinary.com/daasrv6ic/image/upload/v1728474509/chat-app-file/oxdj0xdvm06evydtwpcd.png`}
+                />
+              </a>
+          )}
           <button
             title={user.name}
             onClick={() => setEditUserOpen(true)}
@@ -198,23 +214,23 @@ const Sidebar = () => {
                 <div className="flex items-center">
                   {conv.lastMsg && (
                     <p className="text-sm text-slate-500">
-                      {conv.lastMsg.text
-                        ? conv.lastMsg.text.length > 28
-                          ? `${conv.lastMsg.text.substring(0, 20)}...`
-                          : conv.lastMsg.text
-                        : conv.lastMsg.imageUrl
-                        ? (
-                          <div className="flex items-center">
-                            <FaImage size={20} className="mr-1" /> Sent an image.
-                          </div>
+                      {conv.lastMsg.text ? (
+                        conv.lastMsg.text.length > 28 ? (
+                          `${conv.lastMsg.text.substring(0, 20)}...`
+                        ) : (
+                          conv.lastMsg.text
                         )
-                        : conv.lastMsg.videoUrl
-                        ? (
-                          <div className="flex items-center">
-                            <FaVideo size={20} className="mr-1" /> Sent a video.
-                          </div>
-                        )
-                        : "Sent a message."}
+                      ) : conv.lastMsg.imageUrl ? (
+                        <div className="flex items-center">
+                          <FaImage size={20} className="mr-1" /> Sent an image.
+                        </div>
+                      ) : conv.lastMsg.videoUrl ? (
+                        <div className="flex items-center">
+                          <FaVideo size={20} className="mr-1" /> Sent a video.
+                        </div>
+                      ) : (
+                        "Sent a message."
+                      )}
                     </p>
                   )}
                 </div>

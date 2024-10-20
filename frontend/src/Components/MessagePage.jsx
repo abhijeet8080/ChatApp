@@ -193,7 +193,17 @@ const MessagePage = () => {
   }, [socketConnection, params?.userId, user]);
 
   return (
-    <div className="bg-[url('https://images.hdqwalls.com/download/the-batman-movie-8k-g5-1920x1080.jpg')] bg-cover ">
+    <div
+      style={{
+        backgroundImage: `url(${process.env.REACT_APP_BACKGROUND_IMG})`,
+        backgroundSize: 'cover', // Image covers the container
+        backgroundPosition: 'center', // Centers the image
+        backgroundRepeat: 'no-repeat', // No repeat of the image
+        minHeight: '100vh', // Ensure it covers the full screen height
+      }}
+      className="bg-cover"
+    >
+
       <header className="sticky top-0 h-16 bg-white flex items-center justify-between px-4 sm:px-6 md:px-8 lg:px-10 xl:px-12">
         <div className="flex items-center gap-4">
           <Link to="/" className="lg:hidden">
