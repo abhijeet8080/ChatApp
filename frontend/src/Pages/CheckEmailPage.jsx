@@ -40,7 +40,7 @@ const CheckEmailPage = () => {
     } catch (error) {
         if (error.response && error.response.data) {
             // Handle the 400 error from backend
-            console.log('Error message:', error.response.data.message);  // This should print "User Already Exists"
+            //console.log('Error message:', error.response.data.message);  // This should print "User Already Exists"
             toast.error(error?.response?.data?.message)
           } else {
             // Handle any other errors

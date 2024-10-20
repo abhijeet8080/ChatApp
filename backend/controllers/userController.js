@@ -11,7 +11,7 @@ const { sendVerificationCode, sendWelcomeMail, sendPasswordResetEmail } = requir
 const registerUser = async (req, res) => {
   try {
     const { name, email, password, profile_pic } = req.body;
-    console.log("Register User Request:", req.body); // Debugging
+    // //console.log("Register User Request:", req.body); // Debugging
 
     const existingUser = await User.findOne({ email });
     if (existingUser) {
@@ -68,7 +68,7 @@ const registerUser = async (req, res) => {
 const verifyEmail = async (req, res) => {
   try {
     const { email, verificationCode } = req.body;
-    console.log("Verify Email Request:", req.body); // Debugging
+    // //console.log("Verify Email Request:", req.body); // Debugging
 
     const user = await User.findOne({ email });
     if (!user) {
@@ -133,7 +133,7 @@ const verifyEmail = async (req, res) => {
 // Check Mail
 const checkMail = async (req, res) => {
   try {
-    console.log("checkMail called");
+    // //console.log("checkMail called");
     const { email } = req.body;
     const user = await User.findOne({ email }).select("-password");
 
@@ -163,7 +163,7 @@ const checkMail = async (req, res) => {
 const checkPassword = async (req, res) => {
   try {
     const { userId, password } = req.body;
-    console.log(req.body);
+    // //console.log(req.body);
 
     const user = await User.findById(userId);
 
@@ -214,7 +214,7 @@ const checkPassword = async (req, res) => {
 // Get User Details
 const getUserDetails = async (req, res) => {
   try {
-    console.log("Get user details called");
+    // //console.log("Get user details called");
     const token = req.headers.authorization;
     if (!token || !token.startsWith("Bearer ")) {
       throw new ErrorHandler("Please Login to access this resource", 401);
@@ -253,7 +253,7 @@ const logout = async (req, res) => {
       expires: new Date(Date.now() - 1000), // Set to expire immediately
     };
 
-    console.log("Logging out user..."); // Optional logging for debugging
+    //console.log("Logging out user..."); // Optional logging for debugging
 
     return res.cookie("token", "", cookieOptions).status(200).json({
       message: "Session out",
@@ -272,7 +272,7 @@ const updateUserDetails = async (req, res) => {
   try {
     const token = req.body.token || ""; // Correctly extract the token
     const user = await getUserDetailsFromToken(token);
-    console.log(user);
+    //console.log(user);
 
     if (!user) {
       return res.status(401).json({
@@ -282,7 +282,7 @@ const updateUserDetails = async (req, res) => {
     }
 
     const { name, profile_pic } = req.body;
-    console.log(req.body);
+    //console.log(req.body);
 
     // Validate input
     if (!name && !profile_pic) {
@@ -310,7 +310,7 @@ const updateUserDetails = async (req, res) => {
 
     // Optionally fetch the updated user info
     const userInfo = await User.findById(user._id).select("-password");
-    console.log(userInfo);
+    //console.log(userInfo);
 
     return res.status(200).json({
       message: "User Details Updated Successfully",
@@ -362,7 +362,7 @@ const forgotPassword = async (req, res) => {
   try {
     const { email } = req.body;
 
-    console.log("Forgot Password Request:", req.body);
+    //console.log("Forgot Password Request:", req.body);
 
     if (!email) {
       return res.status(400).json({
@@ -417,7 +417,7 @@ const forgotPassword = async (req, res) => {
 
 // Reset Password Controller
 const resetPassword = async (req, res) => {
-  console.log("reset password called");
+  //console.log("reset password called");
   try {
     const { token } = req.params; 
     const { newPassword } = req.body;

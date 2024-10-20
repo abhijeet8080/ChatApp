@@ -20,7 +20,7 @@ const Sidebar = () => {
   const [allConversations, setAllConversations] = useState([]);
   const [openSearchUser, setOpenSearchUser] = useState(false);
   const socketConnection = useSelector((state) => state.user.socketConnection);
-  console.log("Aboutme", process.env.REACT_APP_ABOUTME);
+  //console.log("Aboutme", process.env.REACT_APP_ABOUTME);
 
   useEffect(() => {
     if (socketConnection) {
@@ -95,7 +95,6 @@ const Sidebar = () => {
     );
   };
 
-  console.log("allConversations", allConversations);
   
   return (
     <div className="w-full h-full flex bg-white">

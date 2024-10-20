@@ -28,7 +28,7 @@ const Avatar = ({ userId, name, imageUrl, width, height }) => {
     'bg-sky-200',
     'bg-blue-200'
   ];
-  // console.log(userId)
+  // //console.log(userId)
   const bgClass = bgColor[userId ? userId % bgColor.length : Math.floor(Math.random() * bgColor.length)];
   const isOnline = onlineUser.includes(userId)
   return (

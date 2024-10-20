@@ -35,7 +35,7 @@ const SearchUser = ({onClose}) => {
     return () => clearTimeout(debounceTimeout); // Cleanup timeout
   }, [search]);
 
-//   console.log(searchUser);
+//   //console.log(searchUser);
 
   return (
     <div className="fixed top-0 bottom-0 left-0 right-0 bg-slate-700 bg-opacity-40 p-2 z-10">

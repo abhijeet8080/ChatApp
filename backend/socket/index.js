@@ -32,7 +32,7 @@ io.on('connection', async (socket) => {
         const token = socket.handshake.auth.token;
 
         if (!token) {
-            console.log('No token provided. Disconnecting socket:', socket.id);
+            //console.log('No token provided. Disconnecting socket:', socket.id);
             socket.disconnect(true);
             return;
         }
@@ -41,7 +41,7 @@ io.on('connection', async (socket) => {
         const user = await getUserDetailsFromToken(token);
 
         if (!user) {
-            console.log('Invalid token. Disconnecting socket:', socket.id);
+            //console.log('Invalid token. Disconnecting socket:', socket.id);
             socket.disconnect(true);
             return;
         }
@@ -134,7 +134,7 @@ socket.on('seen', async (msgByUserId) => {
         });
 
         if (!conversation) {
-            console.log(`No conversation found between user ${userId} and user ${senderId}`);
+            //console.log(`No conversation found between user ${userId} and user ${senderId}`);
             socket.emit('error', { message: 'Conversation not found.' });
             return;
         }
@@ -149,7 +149,7 @@ socket.on('seen', async (msgByUserId) => {
             { "$set": { seen: true } }
         );
 
-        console.log(`Marked ${updateResult.nModified} messages as seen in conversation ${conversation._id}`);
+        //console.log(`Marked ${updateResult.nModified} messages as seen in conversation ${conversation._id}`);
 
         // Emit an event to the sender to notify that their messages have been seen
         if (updateResult.nModified > 0) {
@@ -171,7 +171,7 @@ socket.on('seen', async (msgByUserId) => {
 
 // Inside your socket.on('message-page', async (userIdToMessage) => { ... }) event handler
 socket.on('message-page', async (userIdToMessage) => {
-    console.log('Received userIdToMessage:', userIdToMessage); // Debugging line
+    //console.log('Received userIdToMessage:', userIdToMessage); // Debugging line
 
     try {
         if (!userIdToMessage) {
@@ -399,7 +399,7 @@ socket.on('mark-messages-seen', async (data) => {
         socket.on('disconnect', () => {
             if (user && user._id) {
                 onlineUser.delete(user._id.toString());
-                console.log('Disconnected user:', socket.id);
+                //console.log('Disconnected user:', socket.id);
 
                 // Emit the updated list of online users to all connected clients
                 io.emit('onlineUser', Array.from(onlineUser));

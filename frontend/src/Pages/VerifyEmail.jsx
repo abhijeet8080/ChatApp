@@ -13,8 +13,8 @@ const VerifyEmail = () => {
   const location = useLocation();
   const dispatch = useDispatch();
   const [loading, setLoading] = useState(false)
-  console.log(location)
-  console.log(location?.state?.email)
+  //console.log(location)
+  //console.log(location?.state?.email)
 
   
   const [data, setData] = useState({
@@ -46,7 +46,7 @@ const VerifyEmail = () => {
         verificationCode:data.verificationCode
       })
       setLoading(false);
-      // console.log(response.data)
+      // //console.log(response.data)
       toast.success(response?.data?.message);
       if (response.data.success) {
         dispatch(setToken(response?.data?.token))
@@ -60,7 +60,7 @@ const VerifyEmail = () => {
         setLoading(false);
       if (error.response && error.response.data) {
         // Handle the 400 error from backend
-        console.log("Error message:", error.response.data.message); // This should print "User Already Exists"
+        //console.log("Error message:", error.response.data.message); // This should print "User Already Exists"
         toast.error(error?.response?.data?.message);
       } else {
         // Handle any other errors

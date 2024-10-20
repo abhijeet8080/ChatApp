@@ -27,17 +27,17 @@ const Home = () => {
       };
       const Url = `${process.env.REACT_APP_BACKEND_URL}/api/v1/user-details`;
       const response = await axios.get(Url, config);
-      // console.log(response)
+      // //console.log(response)
       dispatch(setUser(response?.data?.data));
       
     } catch (error) {
-      console.log(error)
+      //console.log(error)
       if(error?.response?.data?.logout){
         dispatch(logout());
         navigate('/email');
       }
       if (error?.response && error?.response?.data) {
-        console.log("Error message:", error?.response?.data?.message);
+        //console.log("Error message:", error?.response?.data?.message);
         navigate("/email");
       } else {
         console.error("Error occurred:", error?.message);
@@ -62,14 +62,14 @@ useEffect(() => {
     dispatch(setOnlineUser(data))
   })
   dispatch(setSocketConnection(socketConnection))
-  console.log("SocketConnction",socketConnection)
+  //console.log("SocketConnction",socketConnection)
   return ()=>{  
     socketConnection.disconnect()
   }
 }, [])
 
   
-  // console.log(location)
+  // //console.log(location)
   const basePath = location.pathname==="/"
   return (
     // <div className="">

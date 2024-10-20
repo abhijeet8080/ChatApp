@@ -9,6 +9,7 @@ import MessagePage from '../Components/MessagePage'
 import AuthLayouts from '../Layouts'
 import Forgotpassword from '../Pages/Forgotpassword'
 import VerifyEmail from '../Pages/VerifyEmail'
+import Aboutme from '../Pages/Aboutme'
 const Router = createBrowserRouter([
     {
         path:"/",
@@ -45,6 +46,10 @@ const Router = createBrowserRouter([
                     }
                 ]
             },
+            {
+                path:'aboutme',
+                element:<Aboutme />
+            }
         ]
     }
 ])

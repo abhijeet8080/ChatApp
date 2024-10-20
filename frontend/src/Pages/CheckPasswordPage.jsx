@@ -12,7 +12,7 @@ const CheckPasswordPage = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const dispatch = useDispatch();
-  // console.log(location);
+  // //console.log(location);
   const [data, setData] = useState({
     userId: "",
     password: "",
@@ -43,7 +43,7 @@ const CheckPasswordPage = () => {
       setLoading(false)
       if (error.response && error.response.data) {
         // Handle the 400 error from backend
-        console.log("Error message:", error.response.data.message); // This should print "User Already Exists"
+        //console.log("Error message:", error.response.data.message); // This should print "User Already Exists"
         toast.error(error?.response?.data?.message);
       } else {
         // Handle any other errors
@@ -64,7 +64,7 @@ const CheckPasswordPage = () => {
         userId:location?.state?._id,
         password:data.password
       })
-      // console.log(response.data)
+      // //console.log(response.data)
       toast.success(response?.data?.message);
       if (response.data.success) {
         dispatch(setToken(response?.data?.token))
@@ -77,7 +77,7 @@ const CheckPasswordPage = () => {
     } catch (error) {
       if (error.response && error.response.data) {
         // Handle the 400 error from backend
-        console.log("Error message:", error.response.data.message); // This should print "User Already Exists"
+        //console.log("Error message:", error.response.data.message); // This should print "User Already Exists"
         toast.error(error?.response?.data?.message);
       } else {
         // Handle any other errors

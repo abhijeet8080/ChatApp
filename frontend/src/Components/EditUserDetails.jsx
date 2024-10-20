@@ -78,7 +78,7 @@ const EditUserDetails = ({ onClose, user }) => {
             name: data.name,
             profile_pic: data.profile_pic
         });
-        // console.log(response)
+        // //console.log(response)
         toast.success(response.data.message);
         if(response.data.success){
 

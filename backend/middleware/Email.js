@@ -12,7 +12,7 @@ exports.sendVerificationCode = async (options) => {
       html: Verification_Email_Template.replace("{verificationCode}", options.verificationCode).replace("{name}", options.name) // HTML body
     });
 
-    console.log("Verification email sent successfully:", response);
+    //console.log("Verification email sent successfully:", response);
   } catch (error) {
     console.error("Error sending verification email:", error);
     throw new Error("Could not send verification email.");
@@ -29,7 +29,7 @@ exports.sendWelcomeMail = async (options) => {
       html: Welcome_Email_Template.replace("{name}", options.name), // HTML body
     });
 
-    console.log("Welcome email sent successfully:", response);
+    //console.log("Welcome email sent successfully:", response);
   } catch (error) {
     console.error("Error sending welcome email:", error);
     throw new Error("Could not send welcome email.");

@@ -168,7 +168,7 @@ const MessagePage = () => {
             setAllMessages(conversation.messages);
           } else {
             // Optionally, handle other conversations (e.g., show a notification)
-            console.log("Received message for a different conversation. Ignoring.");
+            //console.log("Received message for a different conversation. Ignoring.");
           }
         }
       };

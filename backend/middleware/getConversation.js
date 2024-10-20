@@ -24,7 +24,7 @@ const getConversation = async (userId) => {
             .populate('sender', 'name email profile_pic')
             .populate('receiver', 'name email profile_pic');
 
-            console.log(`Fetched ${conversations.length} conversations for user: ${userId}`);
+            //console.log(`Fetched ${conversations.length} conversations for user: ${userId}`);
 
             // Map conversations to include other user details and unseen message count
             const mappedConversations = conversations.map(conv => {
@@ -45,7 +45,7 @@ const getConversation = async (userId) => {
                 };
             });
 
-            console.log("Mapped Conversations: ", mappedConversations);
+            //console.log("Mapped Conversations: ", mappedConversations);
             return mappedConversations;
 
         } catch (error) {
