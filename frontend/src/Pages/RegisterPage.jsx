@@ -48,44 +48,51 @@ const RegisterPage = () => {
 
     setUploadPhoto(null);
   };
-  const handleSubmit = async(e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     e.stopPropagation();
+  
+    const emailDomain = data.email.split('@')[1]; // Get everything after the '@'
+  
+    const restrictedDomains = ['viit.ac.in', 'vupune.ac.in', 'vit.edu'];
+  
+    if (restrictedDomains.includes(emailDomain)) {
+      toast.error('Registrations from this domain are not allowed.');
+      return; 
+    }
+  
     const Url = `${process.env.REACT_APP_BACKEND_URL}/api/v1/register`;
     try {
-    setLoading(true)
-
-        const response = await axios.post(Url,data)
-    setLoading(false)
-
-        // //console.log(response)
-        toast.success(response?.data?.message)
-        if(response.data.success){
-            setData({
-                name: "",
-                email: "",
-                password: "",
-                profile_pic: "",
-            })
-        }
-        navigate('/verifyemail',{
-          state:response?.data?.data
-        })
+      setLoading(true);
+  
+      const response = await axios.post(Url, data);
+      setLoading(false);
+  
+      toast.success(response?.data?.message);
+      if (response.data.success) {
+        setData({
+          name: '',
+          email: '',
+          password: '',
+          profile_pic: '',
+        });
+      }
+  
+      navigate('/verifyemail', {
+        state: response?.data?.data,
+      });
     } catch (error) {
       setLoading(false);
-
-        if (error.response && error.response.data) {
-            // Handle the 400 error from backend
-            //console.log('Error message:', error.response.data.message);  // This should print "User Already Exists"
-            toast.error(error?.response?.data?.message)
-          } else {
-            // Handle any other errors
-            console.error('Error occurred:', error.message);
-            toast.error(error.message)
-
-          }
+  
+      if (error.response && error.response.data) {
+        toast.error(error?.response?.data?.message);
+      } else {
+        console.error('Error occurred:', error.message);
+        toast.error(error.message);
+      }
     }
   };
+  
   return (
     <>
       <div className="mt-10 flex items-center justify-center">
