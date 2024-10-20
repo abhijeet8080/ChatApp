@@ -19,6 +19,10 @@ process.on("uncaughtException", (err) => {
     process.exit(1);
 });
 
+
+app.use("/",(req,res)=>{
+    res.send("Server is running...")
+})
 // Connect to the database
 connectDatabase();
 
