@@ -120,4 +120,5 @@ build/
 .env.*.local
 
 # Add the following to ignore the backend/config folder
-backend/config/
+backend/config.env
+

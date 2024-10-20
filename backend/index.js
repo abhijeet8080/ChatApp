@@ -2,11 +2,11 @@
 const dotenv = require("dotenv");
 
 // Load environment variables first
-dotenv.config({ path: "./config/config.env" });
+dotenv.config({ path: "./config.env" });
 
 const express = require('express');
 const cors = require("cors");
-const connectDatabase = require("./config/database");
+const connectDatabase = require("./database");
 const app = require("./app"); // Import the app from app.js
 const { server, io } = require("./socket/index"); // Import the server and io from socket/index.js
 

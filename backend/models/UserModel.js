@@ -23,6 +23,10 @@ const userSchema =new mongoose.Schema({
         default:false,
     },
     verificationCode:String,
+    expiresAt: {
+        type: Date,
+        default: () => Date.now() + 10 * 60 * 1000, // 10 minutes from creation
+    },
     resetPasswordToken: String, 
     resetPasswordExpires: Date, 
 

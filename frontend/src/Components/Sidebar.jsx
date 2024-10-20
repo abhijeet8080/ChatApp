@@ -2,7 +2,7 @@
 import { FaUserPlus, FaImage, FaVideo } from "react-icons/fa";
 import React, { useEffect, useState } from "react";
 import { IoChatbubbleEllipsesSharp } from "react-icons/io5";
-import { NavLink, useNavigate } from "react-router-dom";
+import { Link, NavLink, useNavigate } from "react-router-dom";
 import { RiLogoutBoxRFill } from "react-icons/ri";
 import Avatar from "./Avatar";
 import { useSelector, useDispatch } from "react-redux";
@@ -20,6 +20,7 @@ const Sidebar = () => {
   const [allConversations, setAllConversations] = useState([]);
   const [openSearchUser, setOpenSearchUser] = useState(false);
   const socketConnection = useSelector((state) => state.user.socketConnection);
+  console.log("Aboutme", process.env.REACT_APP_ABOUTME);
 
   useEffect(() => {
     if (socketConnection) {
@@ -121,6 +122,14 @@ const Sidebar = () => {
           </div>
         </div>
         <div className="flex flex-col items-center">
+          {process.env.REACT_APP_ABOUTME&&<Link to={'aboutme'}  title={`About`}
+            className="w-12 h-12 flex flex-col justify-center items-center cursor-pointer hover:bg-slate-200 rounded">
+              <Avatar 
+              width={25}
+              height={25}
+              imageUrl={`https://res.cloudinary.com/daasrv6ic/image/upload/v1728474509/chat-app-file/oxdj0xdvm06evydtwpcd.png`}
+              />
+          </Link>}
           <button
             title={user.name}
             onClick={() => setEditUserOpen(true)}
