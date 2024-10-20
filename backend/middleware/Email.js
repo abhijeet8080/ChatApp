@@ -26,7 +26,7 @@ exports.sendWelcomeMail = async (options) => {
       to: options.mail, // Receiver's email
       subject: options.subject, // Subject line
       text: `Welcome to Whisper, ${options.name}!`, // Plain text body
-      html: Welcome_Email_Template.replace("{name}", options.name), // HTML body
+      html: Welcome_Email_Template.replace("{name}", options.name).replace("{resetUrl}", process.env.FRONTEND_URL), // HTML body
     });
 
     //console.log("Welcome email sent successfully:", response);
