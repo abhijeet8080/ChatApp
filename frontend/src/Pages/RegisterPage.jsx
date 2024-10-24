@@ -97,7 +97,7 @@ const RegisterPage = () => {
     <>
       <div className="mt-10 flex items-center justify-center">
         <div className="bg-white w-full max-w-sm mx:2  rounded overflow-hidden p-4 md:mx-auto">
-          <h3>Welcome to Whisper</h3>
+          <h3>Welcome to ChatWave</h3>
 
           <form action="" className="grid gap-4 mt-5" onSubmit={handleSubmit}>
             <div className="flex flex-col gap-1">

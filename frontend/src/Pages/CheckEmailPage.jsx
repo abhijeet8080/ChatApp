@@ -88,7 +88,7 @@ const CheckEmailPage = () => {
           <div className="w-fit mx-auto mb-2">
             <PiUserCircleLight size={80} />
           </div>
-          <h3>Welcome to Whisper</h3>
+          <h3>Welcome to ChatWave</h3>
 
           <form className="grid gap-4 mt-5" onSubmit={handleSubmit}>
             <div className="flex flex-col gap-1">

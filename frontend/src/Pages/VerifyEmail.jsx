@@ -92,7 +92,7 @@ const VerifyEmail = () => {
             />
             <h2 className="font-semibold text-lg mt-1">{location?.state?.name}</h2>
           </div>
-          <h3>Welcome to Whisper</h3>
+          <h3>Welcome to ChatWave</h3>
 
           <form action="" className="grid gap-4 mt-5" onSubmit={handleSubmit}>
             <div className="flex flex-col gap-1">

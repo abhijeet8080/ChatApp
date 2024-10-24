@@ -103,7 +103,7 @@ const verifyEmail = async (req, res) => {
     // Optionally send Welcome Email after verification
     await sendWelcomeMail({
       mail: user.email,
-      subject: "Welcome to Whisper",
+      subject: "Welcome to ChatWave",
       name: user.name,
     });
     const tokenData = {

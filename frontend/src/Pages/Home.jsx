@@ -90,7 +90,7 @@ useEffect(() => {
                 width={250}
                 alt='logo'
               /> */}
-              Whisper
+              ChatWave
             </div>
             <p className='text-xl mt-2 text-slate-200 font-semibold '>Connect Instantly, Chat Effortlessly</p>
 

@@ -70,7 +70,7 @@ exports.Verification_Email_Template = `
               <p>If you did not create an account, no further action is required. If you have any questions, feel free to contact our support team.</p>
           </div>
           <div class="footer">
-              <p>&copy; ${new Date().getFullYear()} Whisper. All rights reserved.</p>
+              <p>&copy; ${new Date().getFullYear()} ChatWave. All rights reserved.</p>
           </div>
       </div>
   </body>
@@ -86,7 +86,7 @@ exports.Welcome_Email_Template = `
   <head>
       <meta charset="UTF-8">
       <meta name="viewport" content="width=device-width, initial-scale=1.0">
-      <title>Welcome to Whisper</title>
+      <title>Welcome to ChatWave</title>
       <style>
           body {
               font-family: Arial, sans-serif;
@@ -160,10 +160,10 @@ exports.Welcome_Email_Template = `
   </head>
   <body>
       <div class="container">
-          <div class="header">Welcome to Whisper!</div>
+          <div class="header">Welcome to ChatWave!</div>
           <div class="content">
               <p class="welcome-message">Hello {name},</p>
-              <p>We're excited to have you join **Whisper**, your new favorite place to connect and communicate seamlessly with friends, family, and colleagues.</p>
+              <p>We're excited to have you join **ChatWave**, your new favorite place to connect and communicate seamlessly with friends, family, and colleagues.</p>
               
               <div class="features">
                   <p>Here are some features to help you get started:</p>
@@ -178,17 +178,17 @@ exports.Welcome_Email_Template = `
               
               <a href="{resetUrl}" class="button">Get Started</a>
               
-              <p>To make the most out of Whisper, we recommend setting up your profile and adding contacts:</p>
+              <p>To make the most out of ChatWave, we recommend setting up your profile and adding contacts:</p>
               <ul>
                   <li>Complete your profile with a photo and bio.</li>
-                  <li>Invite friends to join Whisper.</li>
+                  <li>Invite friends to join ChatWave.</li>
                   <li>Explore and customize your chat settings.</li>
               </ul>
               
               <p>If you have any questions or need assistance, our support team is here to help. Feel free to reach out at any time.</p>
           </div>
           <div class="footer">
-              <p>&copy; ${new Date().getFullYear()} Whisper. All rights reserved.</p>
+              <p>&copy; ${new Date().getFullYear()} ChatWave. All rights reserved.</p>
               <p>If you didn't create an account with us, please ignore this email or <a href="#" style="color: #7800bc;">contact support</a> if you have concerns.</p>
           </div>
       </div>

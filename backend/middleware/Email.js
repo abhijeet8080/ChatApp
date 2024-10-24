@@ -5,7 +5,7 @@ const { transporter } = require("./Email.config");
 exports.sendVerificationCode = async (options) => {
   try {
     const response = await transporter.sendMail({
-      from: `"Whisper" <${process.env.SMTP_MAIL}>`, // Correct 'from' format
+      from: `"ChatWave" <${process.env.SMTP_MAIL}>`, // Correct 'from' format
       to: options.mail, // Receiver's email
       subject: options.subject, // Subject line
       text: `Your verification code is ${options.verificationCode}`, // Plain text body
@@ -22,10 +22,10 @@ exports.sendVerificationCode = async (options) => {
 exports.sendWelcomeMail = async (options) => {
   try {
     const response = await transporter.sendMail({
-      from: `"Whisper" <${process.env.SMTP_MAIL}>`, // Correct 'from' format
+      from: `"ChatWave" <${process.env.SMTP_MAIL}>`, // Correct 'from' format
       to: options.mail, // Receiver's email
       subject: options.subject, // Subject line
-      text: `Welcome to Whisper, ${options.name}!`, // Plain text body
+      text: `Welcome to ChatWave, ${options.name}!`, // Plain text body
       html: Welcome_Email_Template.replace("{name}", options.name).replace("{resetUrl}", process.env.FRONTEND_URL), // HTML body
     });
 
@@ -38,7 +38,7 @@ exports.sendWelcomeMail = async (options) => {
 // Send Password Reset Email
 exports.sendPasswordResetEmail = async ({ mail, subject, name, resetUrl }) => {
   const mailOptions = {
-    from: `"Whisper" <${process.env.SMTP_MAIL}>`,
+    from: `"ChatWave" <${process.env.SMTP_MAIL}>`,
     to: mail,
     subject: subject,
     html: `
