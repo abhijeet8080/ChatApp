@@ -1,3 +1,4 @@
+// index.js
 const dotenv = require("dotenv");
 
 // Load environment variables first
@@ -20,12 +21,6 @@ process.on("uncaughtException", (err) => {
 
 // Connect to the database
 connectDatabase();
-
-// Set up CORS middleware for Express app
-app.use(cors({
-    origin: process.env.FRONTEND_URL, // Frontend URL from environment variable
-    credentials: true // Allow credentials (cookies, headers, etc.)
-}));
 
 // Define a simple root route
 app.get("/", (req, res) => {

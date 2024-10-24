@@ -7,8 +7,6 @@ const bodyparser = require("body-parser");
 // Create Express app
 const app = express();
 
-// Log FRONTEND_URL for debugging
-
 // Check if FRONTEND_URL is set
 if (!process.env.FRONTEND_URL) {
     console.error("FRONTEND_URL is not defined in the environment variables.");
@@ -19,7 +17,7 @@ if (!process.env.FRONTEND_URL) {
 app.use(express.json());
 app.use(cors({
     origin: process.env.FRONTEND_URL,
-    credentials: true
+    credentials: true // Allow credentials (cookies, etc.)
 }));
 app.use(cookieParser());
 app.use(bodyparser.urlencoded({ extended: true }));
