@@ -2,16 +2,16 @@
 const { Server } = require("socket.io");
 const http = require("http");
 const app = require("../app");
-
+const socketIO = require('socket.io');
 const server = http.createServer(app);
 
-// Initialize the Socket.IO server with CORS options
-const io = new Server(server, {
+const allowedOrigins = [process.env.FRONTEND_URL,"https://chat-app-frontend-eta-fawn.vercel.app"]
+const io = socketIO(server, {
   cors: {
-    origin: process.env.FRONTEND_URL, // Allow the frontend URL
-    methods: ["GET", "POST"], // Allowed methods
-    credentials: true, // Allow credentials (cookies, etc.)
-  },
+    origin: allowedOrigins, // Frontend URL
+    methods: ["GET", "POST"],
+    credentials: true // Allow credentials like cookies
+  }
 });
 
 const { getUserDetailsFromToken } = require("../middleware/auth");
@@ -20,7 +20,6 @@ const Conversation = require("../models/ConversationModel");
 const Message = require("../models/MessageModel");
 const mongoose = require("mongoose");
 
-// Create HTTP server using the existing app
 
 // Online users tracked using a Set for efficient lookup
 const onlineUser = new Set();

@@ -20,5 +20,20 @@
             "src": "/(.*)",   
             "dest": "/src/$1"    
         }
+    ],
+    "headers": [
+        {
+            "source": "/(.*)",
+            "headers": [
+                {
+                    "key": "Access-Control-Allow-Origin",
+                    "value": "https://chat-app-frontend-eta-fawn.vercel.app"
+                },
+                {
+                    "key": "Access-Control-Allow-Credentials",
+                    "value": "true"
+                }
+            ]
+        }
     ]
 }
