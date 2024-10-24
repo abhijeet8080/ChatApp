@@ -1,11 +1,10 @@
-// index.js
 const dotenv = require("dotenv");
 
 // Load environment variables first
 if (process.env.NODE_ENV !== 'production') {
     require('dotenv').config({ path: "./config.env" });
-  }
-  
+}
+
 const express = require('express');
 const cors = require("cors");
 const connectDatabase = require("./database");
@@ -19,24 +18,19 @@ process.on("uncaughtException", (err) => {
     process.exit(1);
 });
 
-
-app.use("/",(req,res)=>{
-    res.send("Server is running...")
-})
 // Connect to the database
 connectDatabase();
 
 // Set up CORS middleware for Express app
 app.use(cors({
-    origin: process.env.FRONTEND_URL,
-    credentials: true
+    origin: process.env.FRONTEND_URL, // Frontend URL from environment variable
+    credentials: true // Allow credentials (cookies, headers, etc.)
 }));
 
-// Handle preflight requests for all routes
-app.options('*', cors({
-    origin: process.env.FRONTEND_URL,
-    credentials: true
-}));
+// Define a simple root route
+app.get("/", (req, res) => {
+    res.send("Server is running...");
+});
 
 const PORT = process.env.PORT || 8080;
 

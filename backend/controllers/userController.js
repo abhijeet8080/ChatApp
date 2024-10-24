@@ -10,6 +10,7 @@ const { sendVerificationCode, sendWelcomeMail, sendPasswordResetEmail } = requir
 // Register User
 const registerUser = async (req, res) => {
   try {
+    console.log("Register User called");
     const { name, email, password, profile_pic } = req.body;
     // //console.log("Register User Request:", req.body); // Debugging
 
@@ -56,6 +57,7 @@ const registerUser = async (req, res) => {
       success: true,
     });
   } catch (error) {
+
     console.error("Registration Error:", error);
     return res.status(500).json({
       message: error.message || "Internal Server Error",
@@ -67,6 +69,8 @@ const registerUser = async (req, res) => {
 // Verify Email
 const verifyEmail = async (req, res) => {
   try {
+    console.log("Verify email called");
+
     const { email, verificationCode } = req.body;
     // //console.log("Verify Email Request:", req.body); // Debugging
 
@@ -133,7 +137,7 @@ const verifyEmail = async (req, res) => {
 // Check Mail
 const checkMail = async (req, res) => {
   try {
-    // //console.log("checkMail called");
+    console.log("checkMail called");
     const { email } = req.body;
     const user = await User.findOne({ email }).select("-password");
 
@@ -152,6 +156,8 @@ const checkMail = async (req, res) => {
       data: user,
     });
   } catch (error) {
+    console.error("CheckMail Error:", error);
+
     return res.status(500).json({
       message: error.message || error,
       error: true,
@@ -162,6 +168,8 @@ const checkMail = async (req, res) => {
 // Check Password
 const checkPassword = async (req, res) => {
   try {
+    console.log("Check password called");
+
     const { userId, password } = req.body;
     // //console.log(req.body);
 
@@ -204,6 +212,8 @@ const checkPassword = async (req, res) => {
       token: token,
     });
   } catch (error) {
+    console.error("CheckPassword Error:", error);
+
     return res.status(500).json({
       message: error.message || error,
       error: true,
@@ -214,7 +224,7 @@ const checkPassword = async (req, res) => {
 // Get User Details
 const getUserDetails = async (req, res) => {
   try {
-    // //console.log("Get user details called");
+    console.log("Get user details called");
     const token = req.headers.authorization;
     if (!token || !token.startsWith("Bearer ")) {
       throw new ErrorHandler("Please Login to access this resource", 401);
@@ -237,6 +247,7 @@ const getUserDetails = async (req, res) => {
       data: user,
     });
   } catch (error) {
+    console.error("Get User Details Error: ",error)
     return res.status(500).json({
       message: error.message || error,
       error: true,
@@ -260,6 +271,8 @@ const logout = async (req, res) => {
       success: true,
     });
   } catch (error) {
+    console.error("Logout Error:", error);
+
     return res.status(500).json({
       message: error.message || error,
       error: true,
@@ -270,6 +283,7 @@ const logout = async (req, res) => {
 // Update User Details
 const updateUserDetails = async (req, res) => {
   try {
+    console.log("Update User Details called")
     const token = req.body.token || ""; // Correctly extract the token
     const user = await getUserDetailsFromToken(token);
     //console.log(user);
@@ -329,6 +343,8 @@ const updateUserDetails = async (req, res) => {
 // Search User
 const searchUser = async (req, res) => {
   try {
+    console.log("Search User called");
+
     const { search } = req.body;
     let users;
 
@@ -360,6 +376,8 @@ const searchUser = async (req, res) => {
 // Forgot Password
 const forgotPassword = async (req, res) => {
   try {
+    console.log("Forgot Password called");
+
     const { email } = req.body;
 
     //console.log("Forgot Password Request:", req.body);
@@ -417,8 +435,9 @@ const forgotPassword = async (req, res) => {
 
 // Reset Password Controller
 const resetPassword = async (req, res) => {
-  //console.log("reset password called");
+  console.log("reset password called");
   try {
+
     const { token } = req.params; 
     const { newPassword } = req.body;
 
