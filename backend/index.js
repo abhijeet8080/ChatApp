@@ -1,4 +1,3 @@
-// index.js
 const dotenv = require("dotenv");
 
 // Load environment variables first
@@ -6,11 +5,9 @@ if (process.env.NODE_ENV !== 'production') {
     require('dotenv').config({ path: "./config.env" });
 }
 
-const express = require('express');
-const cors = require("cors");
 const connectDatabase = require("./database");
-const app = require("./app"); // Import the app from app.js
-const { server, io } = require("./socket/index"); // Import the server and io from socket/index.js
+const app = require("./app");
+const { server, io } = require("./socket/index");
 
 // Handle uncaught exceptions
 process.on("uncaughtException", (err) => {
@@ -22,9 +19,9 @@ process.on("uncaughtException", (err) => {
 // Connect to the database
 connectDatabase();
 
-// Define a simple root route
-app.get("/", (req, res) => {
-    res.send("Server is running...");
+// Define a simple health check route
+app.get("/health", (req, res) => {
+    res.status(200).json({ status: "ok", message: "Server is running" });
 });
 
 const PORT = process.env.PORT || 8080;
@@ -42,3 +39,6 @@ process.on("unhandledRejection", err => {
         process.exit(1);
     });
 });
+
+// For Vercel serverless functions
+module.exports = server;
