@@ -2,16 +2,36 @@
 const { Server } = require("socket.io");
 const http = require("http");
 const app = require("../app");
-const socketIO = require('socket.io');
+
+// Create HTTP server
 const server = http.createServer(app);
 
-const allowedOrigins = [process.env.FRONTEND_URL,"https://chat-app-frontend-eta-fawn.vercel.app"]
-const io = socketIO(server, {
+// Define allowed origins
+const allowedOrigins = [
+  process.env.FRONTEND_URL,
+  "https://chat-app-frontend-eta-fawn.vercel.app"
+];
+
+// Configure Socket.IO with proper CORS settings
+const io = new Server(server, {
   cors: {
-    origin: allowedOrigins, // Frontend URL
+    origin: (origin, callback) => {
+      // Allow requests with no origin (like mobile apps or curl requests)
+      if (!origin) return callback(null, true);
+      
+      if (allowedOrigins.indexOf(origin) !== -1) {
+        callback(null, true);
+      } else {
+        console.log("Blocked origin:", origin);
+        callback(new Error('Not allowed by CORS'));
+      }
+    },
     methods: ["GET", "POST"],
-    credentials: true // Allow credentials like cookies
-  }
+    credentials: true,
+    allowedHeaders: ["Authorization", "Content-Type"],
+    transports: ['websocket', 'polling']
+  },
+  allowEIO3: true // Allow Engine.IO version 3 clients
 });
 
 const { getUserDetailsFromToken } = require("../middleware/auth");
